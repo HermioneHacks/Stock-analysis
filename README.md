@@ -1,5 +1,8 @@
 # Stock-analysis
 This Python tool provides three main functionalities: fetching and summarizing news articles, performing stock analysis, and running Monte Carlo simulations on stock prices. The tool interacts with the user via a simple command-line interface.
+
+This project was created to explore market trends using financial data and NLP-powered news summarization — all in a deployable, user-interactive tool.
+
 # Features:
 
     News Summary
@@ -45,3 +48,13 @@ Enter stock symbol: AAPL
 Enter period (e.g., 1mo, 6mo, 1y): 1y
 
 This tool is a simple yet powerful way to analyze both financial data and news for decision-making or just for exploring market trends.
+
+# 🧠 Motivation
+This project was built to:
+
+    Combine financial data with NLP tools
+
+    Explore Python-based data analysis in a real-world use case
+
+    Create a reusable, lightweight tool for investors or curious learners
+
