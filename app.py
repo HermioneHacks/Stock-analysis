@@ -25,13 +25,17 @@ if option == "News Summary":
                 st.write(article['summary'])
 
 # STOCK ANALYSIS
-elif option == "Stock Analysis":
-    st.header("📊 Stock Price Analysis with Bollinger Bands")
-    ticker = st.text_input("Enter Stock Symbol:", "AAPL")
-    period = st.selectbox("Select period:", ["1mo", "3mo", "6mo", "1y", "2y"], index=3)
-    if st.button("Analyze"):
-        with st.spinner("Loading chart..."):
-            plot_bollinger_bands(ticker, period)
+# elif option == "Stock Analysis":
+#     st.header("📊 Stock Price Analysis with Bollinger Bands")
+#     ticker = st.text_input("Enter Stock Symbol:", "AAPL")
+#     period = st.selectbox("Select period:", ["1mo", "3mo", "6mo", "1y", "2y"], index=3)
+#     if st.button("Analyze"):
+#         with st.spinner("Loading chart..."):
+#             plot_bollinger_bands(ticker, period)
+elif option == "📊 Stock Analysis":
+    st.header("📊 Stock Analysis with Bollinger Bands")
+    st.info("This feature is currently under development and will be re-enabled soon.")
+
 
 # MONTE CARLO
 elif option == "Monte Carlo Simulation":
