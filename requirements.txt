@@ -1,0 +1,7 @@
+streamlit
+yfinance
+matplotlib
+requests
+transformers
+torch
+beautifulsoup4
