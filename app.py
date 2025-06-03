@@ -40,4 +40,5 @@ elif option == "Monte Carlo Simulation":
     simulations = st.slider("Number of Simulations", min_value=100, max_value=1000, step=100, value=500)
     if st.button("Run Simulation"):
         with st.spinner("Simulating future prices..."):
-            run_monte_carlo_simulation(ticker, period, days, simulations)
+            monte_carlo_simulation(ticker, period, days, simulations)
+
