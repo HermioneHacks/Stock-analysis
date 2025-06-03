@@ -16,7 +16,9 @@ if option == "News Summary":
     query = st.text_input("Enter a topic or company name:", "technology")
     if st.button("Fetch News"):
         with st.spinner("Fetching and summarizing articles..."):
-            articles = fetch_and_summarize_news(query)
+            api_key = st.secrets["NEWS_API_KEY"]
+            articles = fetch_and_summarize_news(query, api_key)
+
             for i, article in enumerate(articles):
                 st.subheader(f"{i+1}. {article['title']}")
                 st.markdown(f"[Read More]({article['url']})")
