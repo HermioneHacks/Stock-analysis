@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from transformers import pipeline
 from bs4 import BeautifulSoup
+import streamlit as st
 
 # Initialize summarization pipeline
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
@@ -41,12 +42,41 @@ def fetch_and_summarize_news(query, api_key, max_articles=5):
         return []
 
 # Function to fetch stock data and plot Bollinger Bands
+# def fetch_and_plot_stock(symbol, period):
+#     try:
+#         stock = yf.Ticker(symbol)
+#         data = stock.history(period=period)
+#         if data.empty:
+#             print("No data found for the given symbol and period.")
+#             return
+
+#         # Calculate Bollinger Bands
+#         data['RollingMean'] = data['Close'].rolling(window=20).mean()
+#         data['UpperBand'] = data['RollingMean'] + 2 * data['Close'].rolling(window=20).std()
+#         data['LowerBand'] = data['RollingMean'] - 2 * data['Close'].rolling(window=20).std()
+
+#         # Plot the stock data with Bollinger Bands
+#         plt.figure(figsize=(10, 5))
+#         plt.plot(data['Close'], label='Close Price', color='blue')
+#         plt.plot(data['RollingMean'], label='Rolling Mean', color='orange')
+#         plt.fill_between(data.index, data['UpperBand'], data['LowerBand'], color='gray', alpha=0.3)
+#         plt.title(f"{symbol} Stock Prices with Bollinger Bands")
+#         plt.xlabel("Date")
+#         plt.ylabel("Price")
+#         plt.legend()
+#         plt.show()
+
+#         print(f"Latest Closing Price: {data['Close'][-1]:.2f}")
+#         print(f"High: {data['High'][-1]:.2f}, Low: {data['Low'][-1]:.2f}, Volume: {data['Volume'][-1]}")
+#     except Exception as e:
+#         print(f"Error fetching or plotting stock data: {e}")
+    
 def fetch_and_plot_stock(symbol, period):
     try:
         stock = yf.Ticker(symbol)
         data = stock.history(period=period)
         if data.empty:
-            print("No data found for the given symbol and period.")
+            st.warning("No data found for the given symbol and period.")
             return
 
         # Calculate Bollinger Bands
@@ -57,18 +87,21 @@ def fetch_and_plot_stock(symbol, period):
         # Plot the stock data with Bollinger Bands
         plt.figure(figsize=(10, 5))
         plt.plot(data['Close'], label='Close Price', color='blue')
-        plt.plot(data['RollingMean'], label='Rolling Mean', color='orange')
+        plt.plot(data['RollingMean'], label='Rolling Mean (20D)', color='orange')
         plt.fill_between(data.index, data['UpperBand'], data['LowerBand'], color='gray', alpha=0.3)
         plt.title(f"{symbol} Stock Prices with Bollinger Bands")
         plt.xlabel("Date")
         plt.ylabel("Price")
         plt.legend()
-        plt.show()
+        st.pyplot(plt.gcf())
 
-        print(f"Latest Closing Price: {data['Close'][-1]:.2f}")
-        print(f"High: {data['High'][-1]:.2f}, Low: {data['Low'][-1]:.2f}, Volume: {data['Volume'][-1]}")
+        # Display stock stats
+        st.markdown(f"**Latest Close:** ${data['Close'][-1]:.2f}")
+        st.markdown(f"**High:** ${data['High'][-1]:.2f} | **Low:** ${data['Low'][-1]:.2f} | **Volume:** {int(data['Volume'][-1])}")
+
     except Exception as e:
-        print(f"Error fetching or plotting stock data: {e}")
+        st.error(f"Error fetching or plotting stock data: {e}")
+
 
 # Function to run Monte Carlo simulations for stock prices
 def monte_carlo_simulation(symbol, period, days, simulations):
@@ -76,7 +109,7 @@ def monte_carlo_simulation(symbol, period, days, simulations):
         stock = yf.Ticker(symbol)
         data = stock.history(period=period)
         if data.empty:
-            print("No data found for the given symbol and period.")
+            st.warning("No data found for the given symbol and period.")
             return
 
         daily_returns = data['Close'].pct_change().dropna()
@@ -93,18 +126,24 @@ def monte_carlo_simulation(symbol, period, days, simulations):
                 prices.append(next_price)
             simulated_prices[i] = prices
 
+        # Plot
         plt.figure(figsize=(10, 5))
         for i in range(simulations):
-            plt.plot(simulated_prices[i], color='gray', alpha=0.5)
+            plt.plot(simulated_prices[i], color='gray', alpha=0.4)
         plt.title(f"Monte Carlo Simulation for {symbol}")
         plt.xlabel("Days")
-        plt.ylabel("Price")
-        plt.show()
+        plt.ylabel("Simulated Price")
+        st.pyplot(plt.gcf())
 
-        print(f"Expected Price after {days} days: {np.mean(simulated_prices[:, -1]):.2f}")
-        print(f"95% Confidence Interval: {np.percentile(simulated_prices[:, -1], [2.5, 97.5])}")
+        # Show summary statistics
+        expected_price = np.mean(simulated_prices[:, -1])
+        conf_interval = np.percentile(simulated_prices[:, -1], [2.5, 97.5])
+
+        st.success(f"Expected Price after {days} days: ${expected_price:.2f}")
+        st.info(f"95% Confidence Interval: ${conf_interval[0]:.2f} - ${conf_interval[1]:.2f}")
+
     except Exception as e:
-        print(f"Error running Monte Carlo simulation: {e}")
+        st.error(f"Error running Monte Carlo simulation: {e}")
 
 # Main function to interact with the user
 def main():
