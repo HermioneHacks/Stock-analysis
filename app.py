@@ -1,6 +1,6 @@
 import streamlit as st
 from news_stock_analysis import fetch_and_summarize_news, monte_carlo_simulation
-from Bollinger_Bands import plot_bollinger_bands
+# from Bollinger_Bands import plot_bollinger_bands
 
 st.set_page_config(page_title="📈 Stock Analysis Toolkit", layout="wide")
 
